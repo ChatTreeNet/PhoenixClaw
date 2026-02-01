@@ -48,6 +48,20 @@ PhoenixClaw/
 - Access to `memory_search` and `memory_get` tools
 - Cron system enabled
 
+### Install from Clawdhub
+
+PhoenixClaw is published on Clawdhub:
+https://www.clawhub.ai/goforu/phoenixclaw
+
+Recommended installation is via the Clawdhub CLI:
+
+```bash
+npm i -g clawhub
+# or: pnpm add -g clawhub
+
+clawhub install goforu/phoenixclaw
+```
+
 ### Install from Package
 
 ```bash
