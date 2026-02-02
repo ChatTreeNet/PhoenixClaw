@@ -1,6 +1,6 @@
 ---
 name: phoenixclaw
-version: 0.0.4
+version: 0.0.5
 description: |
   Passive journaling skill that scans daily conversations via cron to generate
   markdown journals using semantic understanding.
@@ -18,16 +18,47 @@ PhoenixClaw automatically distills daily conversations into meaningful reflectio
 Automatically identifies journal-worthy moments, patterns, and growth opportunities.
 
 ## 🛠️ Core Workflow
+
+> [!critical] **MANDATORY: Complete Workflow Execution**
+> This 9-step workflow MUST be executed in full regardless of invocation method:
+> - **Cron execution** (10 PM nightly)
+> - **Manual invocation** ("Show me my journal", "Generate today's journal", etc.)
+> - **Regeneration requests** ("Regenerate my journal", "Update today's entry")
+> 
+> **Never skip steps.** Partial execution causes:
+> - Missing images (session logs not scanned)
+> - Missing finance data (Ledger plugin not triggered)
+> - Incomplete journals (plugins not executed)
+
 PhoenixClaw follows a structured pipeline to ensure consistency and depth:
 
 1. **User Configuration:** Check for `~/.phoenixclaw/config.yaml`. If missing, initiate the onboarding flow defined in `references/user-config.md`.
-2. **Context Retrieval:** Read the current day's memory using `memory_get`, and always scan raw session logs to capture in-progress activity. Note: Session log paths are implementation-dependent; common examples (not guaranteed) include `~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`. If memory is missing or sparse, use session logs to reconstruct context, then update memory so future runs use memory. Incorporate historical context via `memory_search`. If `memory_search` fails due to missing embeddings provider, proceed with daily memory + session logs and skip cross-day pattern search.
-3. **Moment Identification:** Identify "journal-worthy" content: critical decisions, emotional shifts, milestones, or shared media. See `references/media-handling.md` for photo processing.
+
+2. **Context Retrieval:** 
+   - Call `memory_get` for the current day's memory
+   - **CRITICAL: Scan ALL raw session logs** for the current day — session files are often split across multiple files. Use `ls -la` to list files and read **all files modified today**. Common paths (implementation-dependent): `~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`
+   - **Why session logs are mandatory**: `memory_get` returns **text only**. Image metadata, photo references, and media attachments are **only available in session logs**. Skipping session logs = missing all photos.
+   - If memory is sparse, reconstruct context from session logs, then update memory
+   - Incorporate historical context via `memory_search` (skip if embeddings unavailable)
+
+3. **Moment Identification:** Identify "journal-worthy" content: critical decisions, emotional shifts, milestones, or shared media. See `references/media-handling.md` for photo processing. This step generates the `moments` data structure that plugins depend on.
+
 4. **Pattern Recognition:** Detect recurring themes, mood fluctuations, and energy levels. Map these to growth opportunities using `references/skill-recommendations.md`.
-5. **Journal Generation:** Synthesize the day's events into a beautiful Markdown file using `assets/daily-template.md`. Follow the visual guidelines in `references/visual-design.md`.
-6. **Timeline Integration:** If significant events occurred, append them to the master index in `timeline.md` using the format from `assets/timeline-template.md` and `references/obsidian-format.md`.
-7. **Growth Mapping:** Update `growth-map.md` (based on `assets/growth-map-template.md`) if new behavioral patterns or skill interests are detected.
-8. **Profile Evolution:** Update the long-term user profile (`profile.md`) to reflect the latest observations on values, goals, and personality traits. See `references/profile-evolution.md` and `assets/profile-template.md`.
+
+5. **Plugin Execution:** Execute all registered plugins at their declared hook points. See `references/plugin-protocol.md` for the complete plugin lifecycle:
+   - `pre-analysis` → before conversation analysis
+   - `post-moment-analysis` → **Ledger and other primary plugins execute here**
+   - `post-pattern-analysis` → after patterns detected
+   - `journal-generation` → plugins inject custom sections
+   - `post-journal` → after journal complete
+
+6. **Journal Generation:** Synthesize the day's events into a beautiful Markdown file using `assets/daily-template.md`. Follow the visual guidelines in `references/visual-design.md`. **Include all plugin-generated sections** at their declared `section_order` positions.
+
+7. **Timeline Integration:** If significant events occurred, append them to the master index in `timeline.md` using the format from `assets/timeline-template.md` and `references/obsidian-format.md`.
+
+8. **Growth Mapping:** Update `growth-map.md` (based on `assets/growth-map-template.md`) if new behavioral patterns or skill interests are detected.
+
+9. **Profile Evolution:** Update the long-term user profile (`profile.md`) to reflect the latest observations on values, goals, and personality traits. See `references/profile-evolution.md` and `assets/profile-template.md`.
 
 ## ⏰ Cron & Passive Operation
 PhoenixClaw is designed to run without user intervention. It utilizes OpenClaw's built-in cron system to trigger its analysis daily at 10:00 PM local time (0 22 * * *).
@@ -35,17 +66,31 @@ PhoenixClaw is designed to run without user intervention. It utilizes OpenClaw's
 - **Mode:** Primarily Passive. The AI proactively summarizes the day's activities without being asked.
 
 ## 💬 Explicit Triggers
+
 While passive by design, users can interact with PhoenixClaw directly using these phrases:
 - *"Show me my journal for today/yesterday."*
 - *"What did I accomplish today?"*
 - *"Analyze my mood patterns over the last week."*
 - *"Generate my weekly/monthly summary."*
 - *"How am I doing on my personal goals?"*
+- *"Regenerate my journal."* / *"重新生成日记"*
+
+> [!warning] **Manual Invocation = Full Pipeline**
+> When users request journal generation/regeneration, you MUST execute the **complete 9-step Core Workflow** above. This ensures:
+> - **Photos are included** (via session log scanning)
+> - **Ledger plugin runs** (via `post-moment-analysis` hook)
+> - **All plugins execute** (at their respective hook points)
+> 
+> **Common mistakes to avoid:**
+> - ❌ Only calling `memory_get` (misses photos)
+> - ❌ Skipping moment identification (plugins never trigger)
+> - ❌ Generating journal directly without plugin sections
 
 ## 📚 Documentation Reference
 ### References (`references/`)
 - `user-config.md`: Initial onboarding and persistence settings.
 - `cron-setup.md`: Technical configuration for nightly automation.
+- `plugin-protocol.md`: Plugin architecture, hook points, and integration protocol.
 - `media-handling.md`: Strategies for extracting meaning from photos and rich media.
 - `visual-design.md`: Layout principles for readability and aesthetics.
 - `obsidian-format.md`: Ensuring compatibility with Obsidian and other PKM tools.

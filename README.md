@@ -43,13 +43,25 @@ PhoenixClaw/
 │       │   └── cron-setup.md
 │       └── assets/               # 4 templates
 │
+│   └── founder-coach/            # Startup Coaching Skill
+│       ├── SKILL.md
+│       ├── references/           # 14 reference files
+│       │   ├── user-config.md
+│       │   ├── profile-evolution.md
+│       │   ├── weekly-challenge.md
+│       │   └── weekly-report.md
+│       └── assets/               # 3 templates
+│
 ├── tests/
 │   ├── core/                     # Core skill tests
 │   │   ├── mock-memory/
 │   │   └── expected-output/
-│   └── ledger/                   # Ledger plugin tests
-│       ├── mock-memory/
-│       ├── mock-screenshots/
+│   ├── ledger/                   # Ledger plugin tests
+│   │   ├── mock-memory/
+│   │   ├── mock-screenshots/
+│   │   └── expected-output/
+│   └── founder-coach/            # Coach skill tests
+│       ├── mock-conversations/
 │       └── expected-output/
 │
 └── dist/                         # Packaged .skill files
@@ -74,6 +86,9 @@ clawhub install goforu/phoenixclaw
 
 # Install Ledger Plugin (optional)
 clawhub install goforu/phoenixclaw-ledger
+
+# Install Founder Coach (optional)
+clawhub install goforu/founder-coach
 ```
 
 ### Install from Package
@@ -86,6 +101,10 @@ openclaw skill install dist/phoenixclaw.skill
 # Package and install Ledger (optional)
 python ~/.agents/skills/skill-creator/scripts/package_skill.py skills/phoenixclaw-ledger dist/
 openclaw skill install dist/phoenixclaw-ledger.skill
+
+# Package and install Founder Coach (optional)
+python ~/.agents/skills/skill-creator/scripts/package_skill.py skills/founder-coach dist/
+openclaw skill install dist/founder-coach.skill
 ```
 
 ### First-Time Setup
@@ -186,6 +205,24 @@ clawhub install goforu/phoenixclaw-ledger
 
 See `skills/phoenixclaw-ledger/SKILL.md` for details.
 
+### Founder Coach
+
+AI-powered startup mindset coach that helps founders upgrade their thinking patterns and apply mental models.
+
+**Features:**
+- Socratic coaching for startup founders
+- Low-level thinking pattern detection (anti-patterns)
+- Mental model application (PMF, 4Ps, NFX)
+- Weekly challenges and accountability
+- Detailed weekly coaching reports
+
+**Installation:**
+```bash
+clawhub install goforu/founder-coach
+```
+
+See `skills/founder-coach/SKILL.md` for details.
+
 ### Creating Plugins
 
 Plugins hook into PhoenixClaw's pipeline via the plugin protocol:
@@ -221,6 +258,14 @@ openclaw skill test phoenixclaw-ledger \
 
 # Verify Ledger output
 diff -r tests/ledger/expected-output/ tests/ledger/actual-output/
+
+# Test Founder Coach
+openclaw skill test founder-coach \
+  --memory tests/founder-coach/mock-conversations/ \
+  --output tests/founder-coach/actual-output/
+
+# Verify Founder Coach output
+diff -r tests/founder-coach/expected-output/ tests/founder-coach/actual-output/
 ```
 
 ### Test Data
@@ -234,6 +279,12 @@ diff -r tests/ledger/expected-output/ tests/ledger/actual-output/
 - `2026-02-05.md` - Payday with multiple expenses
 - `2026-02-06.md` - Large purchase (electronics)
 - `2026-02-07.md` - Low-spend day with subscription
+
+**Founder Coach tests:**
+- `onboarding-test.md` - Initial setup flow
+- `excuse-thinking-test.md` - Detecting external blame
+- `fear-driven-test.md` - Identifying fear-based decisions
+- `mixed-patterns-test.md` - Multiple anti-patterns in one chat
 
 ## Architecture
 

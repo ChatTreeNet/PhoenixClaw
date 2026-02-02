@@ -38,6 +38,18 @@ skills/
         ├── monthly-report.md
         └── yearly-report.md
 
+└── founder-coach/             # Startup mindset coach skill
+    ├── SKILL.md              # Skill entry point
+    ├── references/           # Coaching guides (14 files)
+    │   ├── user-config.md
+    │   ├── profile-evolution.md
+    │   ├── weekly-challenge.md
+    │   └── weekly-report.md
+    └── assets/               # Coaching templates (3 files)
+        ├── founder-profile-template.md
+        ├── challenge-template.md
+        └── weekly-report-template.md
+
 tests/                        # Test suites
 ├── core/                     # Core skill tests
 └── ledger/                   # Ledger plugin tests
@@ -70,6 +82,15 @@ openclaw skill install dist/phoenixclaw-ledger.skill
 
 # Test ledger plugin
 openclaw skill test phoenixclaw-ledger --memory tests/ledger/mock-memory/ --output tests/ledger/actual-output/
+
+# Package coach skill
+python ~/.agents/skills/skill-creator/scripts/package_skill.py skills/founder-coach dist/
+
+# Install coach skill
+openclaw skill install dist/founder-coach.skill
+
+# Test coach skill
+openclaw skill test founder-coach --memory tests/coach/mock-memory/ --output tests/coach/actual-output/
 ```
 
 ## Markdown Style
@@ -129,14 +150,22 @@ language: auto    # or "zh-CN"
 
 ## Core Workflow
 
+> **CRITICAL: Execute ALL 9 steps regardless of invocation method (cron OR manual)**
+
 1. Load config or trigger onboarding
-2. `memory_get` for today and scan session logs for in-progress activity
-3. Identify moments: decisions, emotions, milestones, photos
+2. `memory_get` for today AND **scan ALL session logs** (session files are often split — read all files modified today). Session logs contain image metadata that `memory_get` cannot provide.
+3. Identify moments: decisions, emotions, milestones, photos → generates `moments` data structure
 4. Detect patterns: themes, mood shifts, energy
-5. Generate journal using `assets/daily-template.md`
-6. Update `timeline.md` for significant events
-7. Update `growth-map.md` for new patterns
-8. Evolve `profile.md` with observations
+5. **Execute plugins** at their hook points (Ledger runs at `post-moment-analysis`)
+6. Generate journal using `assets/daily-template.md` — **include all plugin sections**
+7. Update `timeline.md` for significant events
+8. Update `growth-map.md` for new patterns
+9. Evolve `profile.md` with observations
+
+**Common mistakes when manually invoked:**
+- ❌ Only calling `memory_get` → misses all photos
+- ❌ Skipping step 3 (moment identification) → plugins never trigger
+- ❌ Skipping step 5 (plugin execution) → Ledger section missing
 
 ## Profile Rules
 
@@ -144,6 +173,20 @@ language: auto    # or "zh-CN"
 - **Confidence:** Low (1x), Medium (3+ or 7 days), High (10+ and 30 days)
 - **Sacred:** `user_notes` section - AI must never modify
 - **Privacy:** Never record secrets or quote users directly
+
+## Founder Coach Rules
+
+- **Socratic Only:** Ask questions, don't give answers. Guide the founder to their own insights.
+- **Mindset Focus:** Focus on thinking patterns and mental models, not business tactics.
+- **Max One Intervention:** Max one intervention per anti-pattern per conversation.
+- **Just-in-Time:** Only introduce mental models when relevant to the current conversation.
+- **Anti-Pattern Detection:** Actively monitor for Excuse Thinking, Fear-Driven Decisions, Founder Trap, Perfectionism, Priority Chaos, and Comfort Zone.
+
+## Mental Model Principles
+
+- **Framework over Advice:** Use PMF Levels, 4Ps, and NFX models to provide structure.
+- **Progress Tracking:** Categorize mental model usage as Beginner, Practicing, or Mastered.
+- **Weekly Accountability:** Challenges must include 1 mental model practice and 1 action task.
 
 ## Skill Recommendations
 
