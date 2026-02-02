@@ -1,0 +1,67 @@
+# Budget Test Configuration
+
+budget:
+  enabled: true
+  period: monthly
+  currency: CNY
+  total: 5000
+  
+  categories:
+    food: 1500
+    transport: 500
+    shopping: 800
+    entertainment: 400
+    health: 300
+    education: 200
+    subscription: 200
+  
+  alerts:
+    warn_at: 80
+    critical_at: 95
+    daily_limit: 500
+
+state:
+  current_period: "2026-02"
+  period_start: "2026-02-01"
+  period_end: "2026-02-28"
+  
+  spent:
+    total: 3011.00
+    by_category:
+      food: 518.00
+      transport: 35.00
+      shopping: 2199.00
+      entertainment: 0.00
+      health: 299.00
+      education: 25.00
+      subscription: 50.00
+  
+  remaining:
+    total: 1989.00
+    days_left: 21
+    daily_allowance: 94.71
+
+metrics:
+  percent_spent: 60.2
+  percent_time_elapsed: 25.0
+  pace_status: over
+  days_elapsed: 7
+  expected_by_now: 1250.00
+  actual_vs_expected: +1761.00
+
+alerts_triggered:
+  - type: category_exceeded
+    category: shopping
+    budget: 800.00
+    actual: 2199.00
+    percent: 275
+    
+  - type: large_purchase
+    date: "2026-02-06"
+    amount: 2199.00
+    description: "Sony WH-1000XM5"
+    
+  - type: subscription_review
+    item: "Gym Membership"
+    amount: 299.00
+    reason: "User mentioned low usage"

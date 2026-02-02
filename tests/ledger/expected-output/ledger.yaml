@@ -1,0 +1,228 @@
+# Ledger Test Data - Expected Output
+# This represents the structured data extracted from the test conversations
+
+entries:
+  # ============ 2026-02-05 ============
+  
+  # Morning coffee (screenshot + conversation)
+  - date: "2026-02-05"
+    time: "08:15"
+    amount: -28.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: coffee
+    merchant: "Luckin Coffee"
+    description: "Morning latte"
+    source: screenshot
+    platform: wechat
+    payment_method: "WeChat Balance"
+    screenshot: "assets/2026-02-05/receipt_001.jpg"
+    confidence: 0.95
+
+  # Lunch hotpot (conversation only)
+  - date: "2026-02-05"
+    time: "12:30"
+    amount: -150.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: restaurant
+    description: "Hotpot lunch with colleagues (project celebration), 150 per person"
+    source: conversation
+    people: ["colleagues"]
+    confidence: 0.90
+    notes: "Team of 4, total 600 CNY"
+
+  # Grocery shopping (screenshot + conversation)
+  - date: "2026-02-05"
+    time: "14:45"
+    amount: -86.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: groceries
+    merchant: "Freshippo (Hema)"
+    description: "Strawberries and mangoes"
+    source: screenshot
+    platform: alipay
+    payment_method: "Alipay Balance"
+    original_amount: 96.00
+    discount: 10.00
+    screenshot: "assets/2026-02-05/receipt_002.jpg"
+    confidence: 0.92
+
+  # DiDi ride (conversation only)
+  - date: "2026-02-05"
+    time: "18:30"
+    amount: -35.00
+    currency: CNY
+    type: expense
+    category: transport
+    subcategory: rideshare
+    merchant: "DiDi"
+    description: "Ride home, too tired for subway"
+    source: conversation
+    confidence: 0.88
+
+  # Netflix subscription (conversation only)
+  - date: "2026-02-05"
+    time: "20:00"
+    amount: -50.00
+    currency: CNY
+    type: expense
+    category: subscription
+    merchant: "Netflix"
+    description: "Monthly subscription renewal"
+    source: conversation
+    confidence: 0.75
+    notes: "Amount inferred from typical Netflix pricing"
+
+  # Salary income (conversation only)
+  - date: "2026-02-05"
+    time: "21:30"
+    amount: 15000.00
+    currency: CNY
+    type: income
+    category: income
+    subcategory: salary
+    description: "Monthly salary deposit"
+    source: conversation
+    confidence: 0.95
+
+  # ============ 2026-02-06 ============
+
+  # Breakfast (conversation only)
+  - date: "2026-02-06"
+    time: "09:00"
+    amount: -18.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: snacks
+    merchant: "Convenience Store"
+    description: "Sandwich and milk"
+    source: conversation
+    confidence: 0.85
+
+  # Lunch delivery (screenshot + conversation)
+  - date: "2026-02-06"
+    time: "12:00"
+    amount: -32.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: delivery
+    merchant: "Noodle House"
+    description: "Noodles delivery, busy day"
+    source: screenshot
+    platform: wechat
+    screenshot: "assets/2026-02-06/receipt_001.jpg"
+    confidence: 0.88
+
+  # Friend repayment (conversation only)
+  - date: "2026-02-06"
+    time: "15:30"
+    amount: 200.00
+    currency: CNY
+    type: income
+    category: transfer
+    description: "Friend paid back owed money"
+    source: conversation
+    confidence: 0.90
+
+  # Headphones purchase (screenshot + conversation)
+  - date: "2026-02-06"
+    time: "19:00"
+    amount: -2199.00
+    currency: CNY
+    type: expense
+    category: shopping
+    subcategory: electronics
+    merchant: "JD.com"
+    description: "Sony WH-1000XM5 headphones (on sale)"
+    source: screenshot
+    platform: bank
+    payment_method: "Credit Card ****1234"
+    screenshot: "assets/2026-02-06/receipt_002.jpg"
+    confidence: 0.94
+
+  # Pizza dinner (screenshot + conversation)
+  - date: "2026-02-06"
+    time: "21:00"
+    amount: -89.00
+    currency: CNY
+    type: expense
+    category: food
+    subcategory: delivery
+    merchant: "Pizza Hut (Meituan)"
+    description: "Pizza delivery, lazy evening"
+    source: screenshot
+    platform: wechat
+    original_amount: 104.00
+    discount: 15.00
+    screenshot: "assets/2026-02-06/receipt_003.jpg"
+    confidence: 0.91
+
+  # ============ 2026-02-07 ============
+
+  # Ebook (conversation only)
+  - date: "2026-02-07"
+    time: "14:00"
+    amount: -25.00
+    currency: CNY
+    type: expense
+    category: education
+    description: "Productivity ebook"
+    source: conversation
+    confidence: 0.85
+
+  # Gym membership (conversation only)
+  - date: "2026-02-07"
+    time: "22:00"
+    amount: -299.00
+    currency: CNY
+    type: expense
+    category: health
+    subcategory: fitness
+    merchant: "Gym Membership"
+    description: "Monthly auto-renewal"
+    source: conversation
+    confidence: 0.90
+    recurring: true
+    notes: "User considering cancellation"
+
+# ============ Summary ============
+summary:
+  period: "2026-02-05 to 2026-02-07"
+  
+  totals:
+    income: 15200.00
+    expense: 3011.00
+    net: 12189.00
+  
+  by_date:
+    "2026-02-05":
+      income: 15000.00
+      expense: 349.00
+      transactions: 6
+    "2026-02-06":
+      income: 200.00
+      expense: 2338.00
+      transactions: 5
+    "2026-02-07":
+      income: 0.00
+      expense: 324.00
+      transactions: 2
+  
+  by_category:
+    food: 518.00
+    transport: 35.00
+    shopping: 2199.00
+    subscription: 50.00
+    education: 25.00
+    health: 299.00
+    
+  by_source:
+    conversation: 8
+    screenshot: 5

@@ -1,5 +1,6 @@
 ---
 name: phoenixclaw
+version: 0.0.3
 description: |
   Passive journaling skill that scans daily conversations via cron to generate
   markdown journals using semantic understanding.

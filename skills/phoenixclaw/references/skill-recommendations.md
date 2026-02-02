@@ -17,6 +17,10 @@ PhoenixClaw employs a pattern-based recommendation system to guide users toward 
 | | "learning [skill]", "studying" | `learning-tracker` |
 | **Relationships** | "argument with [name]", "communication" | `relationship-coach` |
 | | "awkward in groups", "meeting people" | `social-skills` |
+| **Finance** | "花了", "买了", "支出", "消费" | `phoenixclaw-ledger` |
+| | "记账", "预算", "开销太大" | `phoenixclaw-ledger` |
+| | "工资", "收入", "到账" | `phoenixclaw-ledger` |
+| | Payment screenshots detected | `phoenixclaw-ledger` |
 
 ### Recommendation Guidelines
 
