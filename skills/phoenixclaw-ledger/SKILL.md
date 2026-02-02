@@ -1,6 +1,5 @@
 ---
 name: phoenixclaw-ledger
-version: 0.0.1
 description: |
   Passive financial tracking plugin for PhoenixClaw.
   Automatically detects expenses and income from conversations and payment screenshots.
@@ -10,6 +9,9 @@ description: |
   - User shares payment screenshots (WeChat Pay, Alipay, etc.)
   - User asks about finances ("How much did I spend?", "My budget")
   - User wants expense reports ("Monthly summary", "Spending analysis")
+
+metadata:
+  version: 0.0.1
 
 depends: phoenixclaw
 protocol_version: 1

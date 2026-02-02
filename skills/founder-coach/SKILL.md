@@ -1,6 +1,5 @@
 ---
 name: founder-coach
-version: 0.0.1
 description: |
   AI-powered startup mindset coach that helps founders upgrade their thinking patterns,
   track mental model progress, and set weekly challenges.
@@ -12,6 +11,8 @@ description: |
   - User wants to set and track weekly challenges
   - User requests a weekly progress report
   - User is discussing startup challenges and needs Socratic questioning
+metadata:
+  version: 0.0.1
 ---
 
 # Founder Coach: Startup Mindset Coach

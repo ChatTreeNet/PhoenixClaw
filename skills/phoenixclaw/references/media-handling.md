@@ -20,6 +20,30 @@
 6. **Rename**: Apply standard naming convention to the file.
 7. **Embed**: Generate the Obsidian-style markdown link and insert into the journal with the appropriate layout.
 
+### Image Extraction Commands
+
+**Find images in session logs:**
+```bash
+grep -n '"type":"image"' ~/.openclaw/sessions/*.jsonl
+```
+
+**Extract image paths and copy:**
+```bash
+# Images are stored in ~/.openclaw/media/inbound/
+# Copy to journal assets
+mkdir -p assets/YYYY-MM-DD/
+cp ~/.openclaw/media/inbound/file_*.jpg assets/YYYY-MM-DD/
+```
+
+**Vision Analysis (example output):**
+- "早餐：猪儿粑配咖啡，放在白色桌面上"
+
+### Curation Rules (Do Not Embed Everything)
+
+- **Embed highlights only**: pick photos that represent meaningful moments, milestones, or emotional peaks.
+- **Finance screenshots** (receipts, invoices, transaction proofs) should be routed to the Ledger plugin output, not the main narrative flow.
+- **Low-signal images** (screenshots of chats, generic docs) should be omitted unless they support a key moment.
+
 ### Storage & Naming
 
 **Path**: `~/PhoenixClaw/Journal/assets/YYYY-MM-DD/`

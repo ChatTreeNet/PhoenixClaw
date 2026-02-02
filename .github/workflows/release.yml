@@ -26,6 +26,12 @@ jobs:
           get_version() {
             local file="$1"
             if [ -f "$file" ]; then
+              local meta
+              meta=$(awk '/^metadata:/{flag=1;next} /^[^ ]/{flag=0} flag && $1=="version:" {print $2; exit}' "$file")
+              if [ -n "$meta" ]; then
+                echo "$meta"
+                return
+              fi
               grep '^version:' "$file" | head -1 | sed 's/version:[[:space:]]*//'
             else
               echo ""

@@ -1,6 +1,5 @@
 ---
 name: phoenixclaw
-version: 0.0.5
 description: |
   Passive journaling skill that scans daily conversations via cron to generate
   markdown journals using semantic understanding.
@@ -9,6 +8,8 @@ description: |
   - User requests journaling ("Show me my journal", "What did I do today?")
   - User asks for pattern analysis ("Analyze my patterns", "How am I doing?")
   - User requests summaries ("Generate weekly/monthly summary")
+metadata:
+  version: 0.0.6
 ---
 
 # PhoenixClaw: Zero-Tag Passive Journaling
@@ -52,9 +53,9 @@ PhoenixClaw follows a structured pipeline to ensure consistency and depth:
    - `journal-generation` → plugins inject custom sections
    - `post-journal` → after journal complete
 
-6. **Journal Generation:** Synthesize the day's events into a beautiful Markdown file using `assets/daily-template.md`. Follow the visual guidelines in `references/visual-design.md`. **Include all plugin-generated sections** at their declared `section_order` positions.
-
-7. **Timeline Integration:** If significant events occurred, append them to the master index in `timeline.md` using the format from `assets/timeline-template.md` and `references/obsidian-format.md`.
+ 6. **Journal Generation:** Synthesize the day's events into a beautiful Markdown file using `assets/daily-template.md`. Follow the visual guidelines in `references/visual-design.md`. **Include all plugin-generated sections** at their declared `section_order` positions.
+ 
+ 7. **Timeline Integration:** If significant events occurred, append them to the master index in `timeline.md` using the format from `assets/timeline-template.md` and `references/obsidian-format.md`.
 
 8. **Growth Mapping:** Update `growth-map.md` (based on `assets/growth-map-template.md`) if new behavioral patterns or skill interests are detected.
 

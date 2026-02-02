@@ -319,7 +319,7 @@ PhoenixClaw uses automated releases via GitHub Actions.
 
 ### How It Works
 
-1. Update the `version:` field in `skills/phoenixclaw/SKILL.md` or `skills/phoenixclaw-ledger/SKILL.md`
+1. Update `metadata.version` in `skills/phoenixclaw/SKILL.md` or `skills/phoenixclaw-ledger/SKILL.md`
 2. Commit and push to `main` (or merge a PR)
 3. GitHub Actions automatically:
    - Detects which skills had version changes
