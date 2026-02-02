@@ -12,7 +12,7 @@ openclaw cron add \
   --message "Scan today's memory logs, generate daily journal entries, and update the vector index for long-term recall. Focus on key achievements and blocked tasks."
 ```
 
-> **Memory Fallback**: If daily memory is missing or sparse, fallback to session logs (`~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`) to reconstruct context, then update daily memory.
+> **Memory & Session Scan**: Always scan session logs (`~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`) alongside daily memory to capture in-progress activity. If daily memory is missing or sparse, use session logs to reconstruct context, then update daily memory.
 
 ### Configuration Details
 - **--name**: Unique identifier for the job. Useful for management.

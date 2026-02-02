@@ -8,7 +8,7 @@
 | **CLI** | Local Path | User provides file path via command line |
 
 > [!important] Media & Memory Tools
-> Note: `memory_get` and `memory_search` return text only. Image metadata and binary references must be sourced from session logs (JSONL) or the local `assets` directory.
+> Note: `memory_get` and `memory_search` return text only. Image metadata and binary references must be sourced from session logs (JSONL) or the local `assets` directory. Scan session logs even when daily memory exists to capture in-progress media.
 
 ### Photo Processing Workflow
 

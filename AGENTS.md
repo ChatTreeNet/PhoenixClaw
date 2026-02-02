@@ -130,7 +130,7 @@ language: auto    # or "zh-CN"
 ## Core Workflow
 
 1. Load config or trigger onboarding
-2. `memory_get` for today (fallback: session logs)
+2. `memory_get` for today and scan session logs for in-progress activity
 3. Identify moments: decisions, emotions, milestones, photos
 4. Detect patterns: themes, mood shifts, energy
 5. Generate journal using `assets/daily-template.md`
@@ -154,7 +154,7 @@ language: auto    # or "zh-CN"
 
 ## Error Handling
 
-**Memory fallback:** If `memory_get` sparse, use session logs (`~/.openclaw/sessions/*.jsonl`)
+**Memory & session scan:** Always scan session logs (`~/.openclaw/sessions/*.jsonl`) alongside daily memory; if `memory_get` is sparse, use session logs to reconstruct context, then update daily memory.
 
 **Embeddings unavailable:** Continue with daily memory, skip cross-day pattern search
 
