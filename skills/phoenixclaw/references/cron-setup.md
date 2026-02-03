@@ -9,7 +9,16 @@ openclaw cron add \
   --cron "0 22 * * *" \
   --tz "auto" \
   --session isolated \
-  --message "Scan today's memory logs, generate daily journal entries, and update the vector index for long-term recall. Focus on key achievements and blocked tasks."
+  --message "Execute PhoenixClaw with COMPLETE 9-step Core Workflow. CRITICAL STEPS:
+1. Load config
+2. memory_get + Scan ALL session logs modified today (find ~/.openclaw/sessions -mtime 0)
+3. Identify moments (decisions, emotions, milestones, photos) -> creates 'moments' data
+4. Detect patterns
+5. Execute ALL plugins at hook points (Ledger runs at post-moment-analysis)
+6. Generate journal WITH all plugin sections
+7-9. Update timeline, growth-map, profile
+
+NEVER skip session log scanning - images are ONLY there. NEVER skip step 3 - plugins depend on moments data."
 ```
 
 > **Memory & Session Scan**: Always scan session logs (`~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`) alongside daily memory to capture in-progress activity. If daily memory is missing or sparse, use session logs to reconstruct context, then update daily memory.
@@ -45,6 +54,29 @@ To completely stop and delete the automated reflection job:
 ```bash
 openclaw cron remove "PhoenixClaw nightly reflection"
 ```
+
+### Post-Execution Verification
+
+After cron runs, verify the full workflow executed:
+
+```bash
+# 1. Check session files were scanned (files modified today)
+find ~/.openclaw/sessions -name "*.jsonl" -mtime 0 | wc -l
+
+# 2. Check images were extracted (if any existed)
+ls -la ~/PhoenixClaw/Journal/assets/$(date +%Y-%m-%d)/ 2>/dev/null || echo "No assets dir"
+
+# 3. Check Ledger plugin ran (if installed)
+grep -q "财务\|Finance\|💰" ~/PhoenixClaw/Journal/daily/$(date +%Y-%m-%d).md && echo "Ledger OK" || echo "Ledger section missing"
+
+# 4. Check journal contains callout sections
+grep -c "\[!" ~/PhoenixClaw/Journal/daily/$(date +%Y-%m-%d).md
+```
+
+**Diagnostic interpretation:**
+- If images are missing → session logs were not properly scanned
+- If Ledger section is missing → moment identification (step 3) was skipped
+- If no callouts → journal generation used minimal template
 
 ### Troubleshooting
 If journals are not appearing as expected, check the following:
