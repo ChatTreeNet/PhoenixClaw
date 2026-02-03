@@ -22,17 +22,28 @@
 
 ### Image Extraction Commands
 
-**Find images in session logs:**
+**Find session files modified today:**
 ```bash
-grep -n '"type":"image"' ~/.openclaw/sessions/*.jsonl
+# Step 1: Identify today's session files (by modification time)
+find ~/.openclaw/sessions -name "*.jsonl" -mtime 0
 ```
 
-**Extract image paths and copy:**
+**Extract image entries from today's sessions:**
+```bash
+# Step 2: Find images in today's session files only
+find ~/.openclaw/sessions -name "*.jsonl" -mtime 0 -exec grep -l '"type":"image"' {} \;
+
+# Step 3: Extract image paths
+find ~/.openclaw/sessions -name "*.jsonl" -mtime 0 -exec grep -h '"type":"image"' {} \; | jq -r '.file_path // .url'
+```
+
+**Copy images to journal assets:**
 ```bash
 # Images are stored in ~/.openclaw/media/inbound/
 # Copy to journal assets
-mkdir -p assets/YYYY-MM-DD/
-cp ~/.openclaw/media/inbound/file_*.jpg assets/YYYY-MM-DD/
+TODAY=$(date +%Y-%m-%d)
+mkdir -p ~/PhoenixClaw/Journal/assets/$TODAY/
+cp ~/.openclaw/media/inbound/file_*.jpg ~/PhoenixClaw/Journal/assets/$TODAY/
 ```
 
 **Vision Analysis (example output):**

@@ -37,14 +37,24 @@ PhoenixClaw follows a structured pipeline to ensure consistency and depth:
 
 2. **Context Retrieval:** 
    - Call `memory_get` for the current day's memory
-   - **CRITICAL: Scan ALL raw session logs** for the current day — session files are often split across multiple files. Use `ls -la` to list files and read **all files modified today**. Common paths (implementation-dependent): `~/.openclaw/sessions/*.jsonl` or `.agent/sessions/`
+   - **CRITICAL: Scan ALL raw session logs modified today**. Session files are often split across multiple files. Use timestamp-based discovery, NOT filename sorting:
+     ```bash
+     # Find ALL session files modified today (by modification time)
+     find ~/.openclaw/sessions -name "*.jsonl" -mtime 0
+     
+     # Alternative: filter by today's date explicitly
+     TODAY=$(date +%Y-%m-%d)
+     find ~/.openclaw/sessions -name "*.jsonl" -newermt "$TODAY"
+     ```
+     Read **all matching files** regardless of their numeric naming (e.g., file_22, file_23 may be earlier in name but modified today).
    - **EXTRACT IMAGES FROM SESSION LOGS**: Session logs contain `type: "image"` entries with file paths. You MUST:
      1. Find all image entries (e.g., `"type":"image"`)
      2. Extract the `file_path` or `url` fields
      3. Copy files into `assets/YYYY-MM-DD/`
      4. Rename with descriptive names when possible
    - **Why session logs are mandatory**: `memory_get` returns **text only**. Image metadata, photo references, and media attachments are **only available in session logs**. Skipping session logs = missing all photos.
-   - If memory is sparse, reconstruct context from session logs, then update memory
+   - **Edge case - Midnight boundary**: For late-night activity that spans midnight, consider also scanning yesterday's files with `-mtime -1` or `find -newermt "yesterday"`.
+   - If memory is sparse, reconstruct context from session logs, then update daily memory
    - Incorporate historical context via `memory_search` (skip if embeddings unavailable)
 
 3. **Moment Identification:** Identify "journal-worthy" content: critical decisions, emotional shifts, milestones, or shared media. See `references/media-handling.md` for photo processing. This step generates the `moments` data structure that plugins depend on.
