@@ -15,65 +15,65 @@ tags: [finance, ledger, transactions]
 
 ## ⚡ Recent Activity (Last 7 Days)
 
-> [!expense] ☕ 2026-02-05 Coffee
-> Latte | **¥28.00** | Food
-> *Source: Screenshot*
-
-> [!expense] 🍲 2026-02-05 Hotpot Lunch
-> Project celebration | **¥150.00** | Food
+> [!expense] 🍱 2026-02-09 Office Canteen
+> Lunch | **¥25.00** | Food
 > *Source: Conversation*
 
-> [!expense] 🛒 2026-02-05 Groceries
-> Strawberries and mangoes | **¥86.00** | Food
-> *Source: Screenshot*
-
-> [!expense] 🚗 2026-02-05 DiDi
-> Ride home | **¥35.00** | Transport
-> *Source: Conversation*
-
-> [!expense] 📺 2026-02-05 Netflix
-> Subscription | **¥50.00** | Subscription
-> *Source: Conversation*
-
-> [!expense] 🥪 2026-02-06 Quick Breakfast
-> Convenience store | **¥18.00** | Food
-> *Source: Conversation*
-
-> [!expense] 🍜 2026-02-06 Noodles
-> Lunch delivery | **¥32.00** | Food
-> *Source: Screenshot*
-
-> [!expense] 🎧 2026-02-06 Sony WH-1000XM5
-> Headphones sale | **¥2199.00** | Shopping
-> *Source: Screenshot*
-
-> [!expense] 🍕 2026-02-06 Pizza
-> Lazy dinner | **¥89.00** | Food
-> *Source: Screenshot*
-
-> [!expense] 📚 2026-02-07 eBook
-> Productivity book | **¥25.00** | Education
-> *Source: Conversation*
-
-> [!expense] 🏋️ 2026-02-07 Gym Membership
-> Auto-renewal | **¥299.00** | Health
-> *Source: Conversation*
-
-> [!expense] 🥐 2026-02-08 Sunday Brunch
-> Set menu with friends | **¥125.00** | Food
+> [!expense] 🚌 2026-02-09 Bus
+> Commute | **¥2.00** | Transport
 > *Source: Conversation*
 
 > [!expense] 🛒 2026-02-08 Bulk Grocery
 > Weekly essentials | **¥342.00** | Food
 > *Source: Screenshot*
 
-> [!expense] 🚌 2026-02-09 Bus
-> Commute | **¥2.00** | Transport
+> [!expense] 🥐 2026-02-08 Sunday Brunch
+> Set menu with friends | **¥125.00** | Food
 > *Source: Conversation*
 
-> [!expense] 🍱 2026-02-09 Office Canteen
-> Lunch | **¥25.00** | Food
+> [!expense] 🏋️ 2026-02-07 Gym Membership
+> Auto-renewal | **¥299.00** | Health
 > *Source: Conversation*
+
+> [!expense] 📚 2026-02-07 eBook
+> Productivity book | **¥25.00** | Education
+> *Source: Conversation*
+
+> [!expense] 🍕 2026-02-06 Pizza
+> Lazy dinner | **¥89.00** | Food
+> *Source: Screenshot*
+
+> [!expense] 🎧 2026-02-06 Sony WH-1000XM5
+> Headphones sale | **¥2199.00** | Shopping
+> *Source: Screenshot*
+
+> [!expense] 🍜 2026-02-06 Noodles
+> Lunch delivery | **¥32.00** | Food
+> *Source: Screenshot*
+
+> [!expense] 🥪 2026-02-06 Quick Breakfast
+> Convenience store | **¥18.00** | Food
+> *Source: Conversation*
+
+> [!expense] 📺 2026-02-05 Netflix
+> Subscription | **¥50.00** | Subscription
+> *Source: Conversation*
+
+> [!expense] 🚗 2026-02-05 DiDi
+> Ride home | **¥35.00** | Transport
+> *Source: Conversation*
+
+> [!expense] 🛒 2026-02-05 Groceries
+> Strawberries and mangoes | **¥86.00** | Food
+> *Source: Screenshot*
+
+> [!expense] 🍲 2026-02-05 Hotpot Lunch
+> Project celebration | **¥150.00** | Food
+> *Source: Conversation*
+
+> [!expense] ☕ 2026-02-05 Coffee
+> Latte | **¥28.00** | Food
+> *Source: Screenshot*
 
 > [!expense] 🚇 2026-02-03 Subway
 > Commute | **¥5.00** | Transport
@@ -81,7 +81,7 @@ tags: [finance, ledger, transactions]
 
 ## 📅 Browse by Month
 
-- [[finance/monthly/2026-02.md|February 2026]] — ¥3505.00
+- [[finance/monthly/2026-02.md|February 2026]] — ¥3510.00
 
 ## 🗂️ Browse by Category
 *Grouped by category, sorted by total amount descending*
@@ -91,7 +91,7 @@ tags: [finance, ledger, transactions]
 | :--- | :--- | :--- |
 | 2026-02-06 | Sony WH-1000XM5 | ¥2199.00 |
 
-### 🍲 Food (¥1030.00)
+### 🍲 Food (¥895.00)
 | Date | Description | Amount |
 | :--- | :--- | :--- |
 | 2026-02-08 | Bulk Grocery | ¥342.00 |
