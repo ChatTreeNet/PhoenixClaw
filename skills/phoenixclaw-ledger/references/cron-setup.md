@@ -8,7 +8,7 @@ PhoenixClaw Ledger leverages the same cron infrastructure as PhoenixClaw Core, w
 |-----|----------|---------|
 | Daily Processing | 10:00 PM | Extract transactions, update ledger |
 | Monthly Report | 1st of month, 8:00 AM | Generate monthly financial summary |
-| Weekly Summary | Sunday, 9:00 PM | Optional weekly spending recap |
+| Weekly Report | Sunday, 9:00 PM | Generate weekly report & browser update |
 
 ## Daily Processing (Automatic)
 
@@ -52,18 +52,39 @@ openclaw cron add \
 - Morning timing ensures report is ready for monthly review
 - Avoids conflict with nightly journal generation
 
-## Weekly Summary (Optional)
+## Weekly Report Setup
 
-For users who want weekly financial check-ins:
+Generate comprehensive weekly financial reports every Sunday evening. This report provides a detailed breakdown of the week's spending, income, and budget utilization using the [weekly-report.md](../assets/weekly-report.md) template.
 
 ```bash
 openclaw cron add \
-  --name "PhoenixClaw Ledger weekly summary" \
+  --name "PhoenixClaw Ledger weekly report" \
   --cron "0 21 * * 0" \
   --tz "auto" \
   --session isolated \
-  --message "Generate weekly spending summary. Compare to weekly budget allocation, highlight notable transactions, and provide brief insights. Include in Sunday's journal entry."
+  --message "Generate weekly financial report. Analyze spending vs budget, identify top expenses, and prepare summary for Sunday's journal. Save to ~/PhoenixClaw/Finance/weekly/."
 ```
+
+### Output Path
+Reports are saved to: `~/PhoenixClaw/Finance/weekly/YYYY-WNN.md` (where `WNN` is the week number).
+
+### Sunday Journal Integration
+The weekly report is also automatically embedded in Sunday's daily journal entry for quick review.
+
+## Transaction Browser Regeneration (Optional)
+
+The Transaction Browser is a searchable Markdown index of all financial activity. You can schedule it to regenerate periodically (e.g., nightly) to ensure the index stays up-to-date.
+
+```bash
+openclaw cron add \
+  --name "PhoenixClaw Ledger browser refresh" \
+  --cron "0 23 * * *" \
+  --tz "auto" \
+  --session isolated \
+  --message "Regenerate the transaction browser index to include today's new entries."
+```
+
+Note: Regeneration can also be triggered manually using `openclaw run "Refresh transaction browser"`.
 
 ## Verification
 
@@ -76,7 +97,8 @@ openclaw cron list | grep -i ledger
 Expected output:
 ```
 PhoenixClaw Ledger monthly report    0 8 1 * *     active
-PhoenixClaw Ledger weekly summary    0 21 * * 0    active
+PhoenixClaw Ledger weekly report     0 21 * * 0    active
+PhoenixClaw Ledger browser refresh   0 23 * * *    active
 ```
 
 ## Manual Triggers
@@ -100,7 +122,8 @@ openclaw run "How much have I spent this week?"
 |-------------|------|-----------|
 | Daily section | `Journal/daily/YYYY-MM-DD.md` | Nightly |
 | Monthly report | `Finance/monthly/YYYY-MM.md` | 1st of month |
-| Weekly summary | In Sunday's journal | Sundays |
+| Weekly report | `Finance/weekly/YYYY-WNN.md` | Sundays |
+| Transaction Browser | `Finance/transactions.md` | Scheduled/Manual |
 | Annual report | `Finance/yearly/YYYY.md` | Jan 1st |
 
 ## Dependency on Core

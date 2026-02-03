@@ -11,7 +11,7 @@ description: |
   - User wants expense reports ("Monthly summary", "Spending analysis")
 
 metadata:
-  version: 0.0.1
+  version: 0.1.0
 
 depends: phoenixclaw
 protocol_version: 1
@@ -37,6 +37,11 @@ PhoenixClaw Ledger automatically extracts financial transactions from your daily
 | **Smart Categorization** | Auto-categorizes based on merchant and context |
 | **Budget Tracking** | Monthly budget alerts and progress visualization |
 | **Financial Insights** | Pattern analysis integrated into journal Growth Notes |
+| **Goal Management** | Savings, budget control, habit, and wishlist goals |
+| **Weekly Reports** | Automated Sunday 9 PM spending recap |
+| **Query Support** | Real-time natural language financial inquiries |
+| **Spending Trends** | Multi-month analytical spending visualization |
+| **Transaction Browser** | Interactive complete transaction history view |
 
 ## Workflow
 
@@ -61,17 +66,24 @@ While passive by design, users can interact directly:
 - *"Set my monthly budget to [amount]"*
 - *"What are my top spending categories?"*
 - *"Generate financial report for [period]"*
+- *"Set a savings goal for [amount] by [date]"*
+- *"Show my spending trends"*
+- *"Browse all my transactions"*
+- *"How am I doing on my goals?"*
 
 ## Output Structure
 
 ```
 ~/PhoenixClaw/
 ├── Journal/
-│   └── daily/2026-02-02.md    # Contains 💰 Finance section
+│   ├── daily/2026-02-02.md    # Contains 💰 Finance section
+│   └── weekly/2026-W05.md     # Weekly financial recaps
 │
 └── Finance/                    # Ledger-specific directory
     ├── ledger.yaml             # Structured transaction data
     ├── budget.yaml             # Budget configuration
+    ├── goals.yaml              # Financial goals tracking
+    ├── transactions.md         # Transaction browser view
     ├── monthly/
     │   └── 2026-02.md          # Monthly financial reports
     └── yearly/
@@ -131,6 +143,8 @@ See `references/cron-setup.md` for full configuration details.
 - `budget-tracking.md`: Budget alerts and progress calculation
 - `financial-insights.md`: Pattern analysis for Growth Notes
 - `cron-setup.md`: Scheduled tasks and report automation
+- `goal-management.md`: Financial goals and progress tracking
+- `query-patterns.md`: Natural language query templates and logic
 
 ### Assets (`assets/`)
 - `expense-callout.md`: Template for conversation-detected expenses

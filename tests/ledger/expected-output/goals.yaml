@@ -1,0 +1,12 @@
+goals:
+  - id: "goal_001"
+    name: "Travel Fund 2026"
+    type: savings
+    status: active
+    currency: CNY
+    target_amount: 50000
+    current_amount: 0
+    start_date: "2026-02-08"
+    deadline: "2026-12-31"
+    tags: [travel, savings]
+    created_at: "2026-02-08T20:00:00Z"
