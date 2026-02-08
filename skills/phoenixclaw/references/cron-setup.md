@@ -28,6 +28,7 @@ NEVER skip session log scanning - images are ONLY there. NEVER skip step 3 - plu
 - **--cron**: Standard crontab syntax. "0 22 * * *" represents 10:00 PM daily.
 - **--tz auto**: Automatically detects the system's local timezone. You can also specify a specific timezone like "America/New_York".
 - **--session isolated**: Ensures the job runs in a clean environment with full tool access, preventing interference from active coding sessions.
+- **--message**: Keep this payload task-focused and version-agnostic. Do not hardcode skill version numbers here; treat `metadata.version` in `SKILL.md` as the source of truth.
 
 ### Verification and Monitoring
 To ensure the job is correctly registered and active:
@@ -62,8 +63,29 @@ After cron runs, verify the full workflow executed:
 ```bash
 # 1. Check target-day messages were scanned (by message timestamp)
 TARGET_DAY="$(date +%Y-%m-%d)"
-find ~/.openclaw/sessions -name "*.jsonl" -print0 |
-  xargs -0 jq -cr --arg day "$TARGET_DAY" 'select((.timestamp // "")[:10] == $day)' | wc -l
+TARGET_TZ="${TARGET_TZ:-Asia/Shanghai}"
+read START_EPOCH END_EPOCH < <(
+  python3 - <<'PY' "$TARGET_DAY" "$TARGET_TZ"
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+import sys
+
+day, tz = sys.argv[1], sys.argv[2]
+start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=ZoneInfo(tz))
+end = start + timedelta(days=1)
+print(int(start.timestamp()), int(end.timestamp()))
+PY
+)
+
+for dir in "$HOME/.openclaw/sessions" "$HOME/.agent/sessions"; do
+  [ -d "$dir" ] || continue
+  find "$dir" -name "*.jsonl" -print0
+done |
+  xargs -0 jq -cr --argjson start "$START_EPOCH" --argjson end "$END_EPOCH" '
+    (.timestamp // .created_at // empty) as $ts
+    | ($ts | fromdateiso8601?) as $epoch
+    | select($epoch != null and $epoch >= $start and $epoch < $end)
+  ' | wc -l
 
 # 2. Check images were extracted (if any existed)
 ls -la ~/PhoenixClaw/Journal/assets/$(date +%Y-%m-%d)/ 2>/dev/null || echo "No assets dir"
@@ -79,6 +101,12 @@ grep -c "\[!" ~/PhoenixClaw/Journal/daily/$(date +%Y-%m-%d).md
 - If images are missing → session logs were not properly scanned
 - If Ledger section is missing → moment identification (step 3) was skipped
 - If no callouts → journal generation used minimal template
+
+Optional JS audit (structured summary, user/noise split):
+
+```bash
+node skills/phoenixclaw/references/session-day-audit.js --day "$(date +%Y-%m-%d)" --tz "Asia/Shanghai"
+```
 
 ### Troubleshooting
 If journals are not appearing as expected, check the following:
