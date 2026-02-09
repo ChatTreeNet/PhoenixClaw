@@ -55,7 +55,7 @@ Template for the finance section integrated into PhoenixClaw daily journals.
 | Variable | Description |
 |----------|-------------|
 | `{{EXPENSES}}` | Array of conversation-detected expenses |
-| `{{RECEIPTS}}` | Array of screenshot-detected expenses |
+| `{{RECEIPTS}}` | Array of screenshot-detected expenses (each `screenshot_path` must be relative to current journal file) |
 
 ### Summary Variables
 
@@ -82,7 +82,7 @@ Template for the finance section integrated into PhoenixClaw daily journals.
 > *Source: Conversation*
 
 > [!receipt] 💳 14:32 WeChat Pay
-> ![[assets/2026-02-02/receipt_001.jpg|300]]
+> ![[../assets/2026-02-02/receipt_001.jpg|300]]
 > Luckin Coffee | **¥19.90** | Food & Dining
 > *Source: Screenshot*
 
@@ -122,7 +122,7 @@ Template for the finance section integrated into PhoenixClaw daily journals.
 ## 💰 Financial Summary
 
 > [!receipt] 💳 19:30 Alipay
-> ![[assets/2026-02-02/receipt_001.jpg|300]]
+> ![[../assets/2026-02-02/receipt_001.jpg|300]]
 > Restaurant | **¥320.00** | Food & Dining
 > *Source: Screenshot*
 
@@ -199,6 +199,7 @@ In the journal, Financial Summary appears at order 45:
 
 - Section uses PhoenixClaw Core's callout styling
 - Images use Obsidian embed syntax
+- `screenshot_path` must be computed from actual file paths (no absolute paths, no hardcoded depth)
 - Currency and language follow user config
 - Amounts formatted with thousands separators
 - Percentages rounded to whole numbers

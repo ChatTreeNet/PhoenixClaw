@@ -53,8 +53,13 @@ Use specific types to highlight content:
 
 ## Image Embedding
 Embed assets with optional size control:
-![[assets/2026/02/capture.jpg|400]]
+![[../assets/2026/02/capture.jpg|400]]
 ![[screenshot.png|200]]
+
+Path rules:
+- Use relative paths from the current note location.
+- Do not use absolute paths such as `/mnt/...` or `C:\\...`.
+- Compute path depth dynamically from the note file and target asset file.
 
 ## Mermaid Charts
 Visualize timelines or processes:

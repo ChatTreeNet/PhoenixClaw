@@ -11,7 +11,7 @@ description: |
   - User wants expense reports ("Monthly summary", "Spending analysis")
 
 metadata:
-  version: 0.1.0
+  version: 0.1.1
 
 depends: phoenixclaw
 protocol_version: 1

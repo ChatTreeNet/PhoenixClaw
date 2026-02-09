@@ -29,7 +29,7 @@ Template for displaying expenses extracted from payment screenshots.
 |----------|-------------|---------|
 | `{{TIME}}` | Transaction time | 14:32 |
 | `{{PLATFORM}}` | Payment platform | WeChat Pay |
-| `{{SCREENSHOT_PATH}}` | Path to receipt image | assets/2026-02-02/receipt_001.jpg |
+| `{{SCREENSHOT_PATH}}` | Path to receipt image (relative to current journal file) | ../assets/2026-02-02/receipt_001.jpg |
 | `{{MERCHANT}}` | Merchant/store name | Luckin Coffee (Wangjing) |
 | `{{CURRENCY}}` | Currency symbol | ¥ |
 | `{{AMOUNT}}` | Final paid amount | 19.90 |
@@ -56,7 +56,7 @@ Template for displaying expenses extracted from payment screenshots.
 
 ```markdown
 > [!receipt] 💳 14:32 WeChat Pay
-> ![[assets/2026-02-02/receipt_001.jpg|300]]
+> ![[../assets/2026-02-02/receipt_001.jpg|300]]
 > 
 > | Field | Value |
 > |-------|-------|
@@ -71,7 +71,7 @@ Template for displaying expenses extracted from payment screenshots.
 
 ```markdown
 > [!receipt] 💳 12:15 Alipay
-> ![[assets/2026-02-02/receipt_002.jpg|300]]
+> ![[../assets/2026-02-02/receipt_002.jpg|300]]
 > 
 > | Field | Value |
 > |-------|-------|
@@ -88,7 +88,7 @@ Template for displaying expenses extracted from payment screenshots.
 
 ```markdown
 > [!receipt] 💳 10:00 Bank Transfer
-> ![[assets/2026-02-02/receipt_003.jpg|300]]
+> ![[../assets/2026-02-02/receipt_003.jpg|300]]
 > 
 > | Field | Value |
 > |-------|-------|
@@ -106,7 +106,7 @@ For multiple receipts, use compact format:
 
 ```markdown
 > [!receipt] 💳 14:32 WeChat Pay
-> ![[assets/2026-02-02/receipt_001.jpg|200]]
+> ![[../assets/2026-02-02/receipt_001.jpg|200]]
 > Luckin Coffee | **¥19.90** | Food & Dining
 > *Auto-detected from screenshot*
 ```
@@ -126,7 +126,7 @@ When extraction confidence is below threshold:
 
 ```markdown
 > [!receipt] 💳 14:32 WeChat Pay
-> ![[assets/2026-02-02/receipt_001.jpg|300]]
+> ![[../assets/2026-02-02/receipt_001.jpg|300]]
 > 
 > | Field | Value |
 > |-------|-------|
@@ -143,7 +143,12 @@ For multiple receipts in one day:
 
 ```markdown
 > [!receipt-gallery] 💳 Today's Receipts
-> ![[assets/2026-02-02/receipt_001.jpg|150]] ![[assets/2026-02-02/receipt_002.jpg|150]] ![[assets/2026-02-02/receipt_003.jpg|150]]
+> ![[../assets/2026-02-02/receipt_001.jpg|150]] ![[../assets/2026-02-02/receipt_002.jpg|150]] ![[../assets/2026-02-02/receipt_003.jpg|150]]
 > 
 > **Total:** ¥256.40 from 3 transactions
 ```
+
+Path safety:
+- `SCREENSHOT_PATH` must come from the copied file location as-is (exact filename).
+- Do not generate absolute paths.
+- Do not assume fixed depth; compute relative path from journal file directory.

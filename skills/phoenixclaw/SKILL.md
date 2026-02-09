@@ -9,7 +9,7 @@ description: |
   - User asks for pattern analysis ("Analyze my patterns", "How am I doing?")
   - User requests summaries ("Generate weekly/monthly summary")
 metadata:
-  version: 0.0.11
+  version: 0.0.12
 ---
 
 # PhoenixClaw: Zero-Tag Passive Journaling
@@ -100,6 +100,9 @@ PY
    - **Embed curated images only**, not every image. Prioritize highlights and moments.
    - **Route finance screenshots to Ledger** sections (receipts, invoices, transaction proofs).
    - Use Obsidian format from `references/media-handling.md` with descriptive captions.
+   - **Generate image links from filesystem truth**: compute the image path relative to the current journal file directory. Never output absolute paths.
+   - **Do not hardcode path depth** (`../` or `../../`): calculate dynamically from `daily_file_path` and `image_path`.
+   - **Use copied filename as source of truth**: if asset file is `image_124917_2.jpg`, the link must reference that exact filename.
 
 7. **Timeline Integration:** If significant events occurred, append them to the master index in `timeline.md` using the format from `assets/timeline-template.md` and `references/obsidian-format.md`.
 
