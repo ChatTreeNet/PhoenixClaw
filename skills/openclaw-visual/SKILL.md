@@ -400,7 +400,7 @@ AI:
 
 - `references/templates.md` - 模板设计规范
 - `references/content-parsing.md` - 内容解析规则
-- `references/api-setup.md` - HTMLCSStoImage 配置
+- `references/rendering-setup.md` - 本地渲染配置
 
 ## 🎨 扩展开发
 

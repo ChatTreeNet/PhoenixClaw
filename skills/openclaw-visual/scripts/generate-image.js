@@ -118,6 +118,14 @@ function buildHTML(bodyContent, css) {
 
 // Generate image using node-html-to-image
 async function generateWithNodeHtmlToImage(html, outputPath, width, height) {
+  const isAutoHeight = height === 'auto' || height === null || height === undefined;
+
+  // Adaptive height requires Playwright (node-html-to-image doesn't support fullPage)
+  if (isAutoHeight) {
+    console.error('Adaptive height detected, switching to Playwright renderer...');
+    return generateWithPlaywright(html, outputPath, width, height);
+  }
+
   const nodeHtmlToImage = require('node-html-to-image');
 
   await nodeHtmlToImage({
@@ -146,16 +154,27 @@ async function generateWithPlaywright(html, outputPath, width, height) {
 
   try {
     const page = await browser.newPage();
-    await page.setViewportSize({ width, height });
+
+    // Check if adaptive height is needed
+    const isAutoHeight = height === 'auto' || height === null || height === undefined;
+
+    // Set viewport - use a large height for auto mode to ensure content renders
+    await page.setViewportSize({
+      width,
+      height: isAutoHeight ? 2000 : height
+    });
+
     await page.setContent(html, { waitUntil: 'networkidle' });
 
     // Wait for fonts to load
     await page.waitForTimeout(500);
 
+    // Take screenshot - use fullPage for adaptive height
     await page.screenshot({
       path: outputPath,
       type: 'png',
-      scale: 'device'
+      scale: 'device',
+      fullPage: isAutoHeight  // Capture full page when height is adaptive
     });
 
     return outputPath;
@@ -190,7 +209,8 @@ function getTemplateDimensions(templateName) {
     'moment-card': { width: 800, height: 1000 },
     'daily-journal': { width: 800, height: 1200 },
     'social-share': { width: 1200, height: 630 },
-    'dashboard': { width: 1200, height: 800 }
+    'dashboard': { width: 1200, height: 800 },
+    'article-long': { width: 800, height: 'auto' }  // Adaptive height for long articles
   };
   return dimensions[templateName] || { width: 800, height: 800 };
 }
