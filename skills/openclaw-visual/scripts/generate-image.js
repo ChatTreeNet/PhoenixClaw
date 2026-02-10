@@ -196,18 +196,16 @@ async function generateWithPlaywright(html, outputPath, width, height) {
       type: 'png',
       scale: 'device'
     };
-    const pageScreenshotOptions = { ...screenshotOptions, fullPage: false };
-
     if (isAutoHeight) {
       const card = await page.$('.card');
       if (card) {
         await card.screenshot(screenshotOptions);
       } else {
         console.warn('Card element not found; falling back to viewport screenshot.');
-        await page.screenshot(pageScreenshotOptions);
+        await page.screenshot(screenshotOptions);
       }
     } else {
-      await page.screenshot(pageScreenshotOptions);
+      await page.screenshot(screenshotOptions);
     }
 
     return outputPath;
