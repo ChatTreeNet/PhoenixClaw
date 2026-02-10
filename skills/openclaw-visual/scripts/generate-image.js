@@ -203,6 +203,7 @@ async function generateWithPlaywright(html, outputPath, width, height) {
       if (card) {
         await card.screenshot(screenshotOptions);
       } else {
+        console.warn('Card element not found; falling back to viewport screenshot.');
         await page.screenshot(pageScreenshotOptions);
       }
     } else {
