@@ -662,6 +662,7 @@ body {
   font-size: 17px;
   line-height: 1.8;
   color: var(--color-secondary);
+  white-space: pre-line;
 }
 
 .article-content p {
