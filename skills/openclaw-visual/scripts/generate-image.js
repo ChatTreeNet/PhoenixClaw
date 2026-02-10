@@ -191,29 +191,22 @@ async function generateWithPlaywright(html, outputPath, width, height) {
     // Wait for fonts to load
     await page.waitForTimeout(500);
 
+    const screenshotOptions = {
+      path: outputPath,
+      type: 'png',
+      scale: 'device'
+    };
+    const pageScreenshotOptions = { ...screenshotOptions, fullPage: false };
+
     if (isAutoHeight) {
       const card = await page.$('.card');
       if (card) {
-        await card.screenshot({
-          path: outputPath,
-          type: 'png',
-          scale: 'device'
-        });
+        await card.screenshot(screenshotOptions);
       } else {
-        await page.screenshot({
-          path: outputPath,
-          type: 'png',
-          scale: 'device',
-          fullPage: false
-        });
+        await page.screenshot(pageScreenshotOptions);
       }
     } else {
-      await page.screenshot({
-        path: outputPath,
-        type: 'png',
-        scale: 'device',
-        fullPage: false
-      });
+      await page.screenshot(pageScreenshotOptions);
     }
 
     return outputPath;
