@@ -191,13 +191,22 @@ async function generateWithPlaywright(html, outputPath, width, height) {
     // Wait for fonts to load
     await page.waitForTimeout(500);
 
-    // Take screenshot - use fullPage for adaptive height
-    await page.screenshot({
+    const screenshotOptions = {
       path: outputPath,
       type: 'png',
-      scale: 'device',
-      fullPage: isAutoHeight  // Capture full page when height is adaptive
-    });
+      scale: 'device'
+    };
+    if (isAutoHeight) {
+      const card = await page.$('.card');
+      if (card) {
+        await card.screenshot(screenshotOptions);
+      } else {
+        console.warn('Card element not found; falling back to viewport screenshot.');
+        await page.screenshot(screenshotOptions);
+      }
+    } else {
+      await page.screenshot(screenshotOptions);
+    }
 
     return outputPath;
   } finally {
