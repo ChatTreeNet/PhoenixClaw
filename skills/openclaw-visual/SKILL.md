@@ -18,6 +18,7 @@ metadata:
 
 将 OpenClaw 中的任何信息转换为精美排版的图片，直接在聊天窗口中展示。
 
+**设计风格**: 现代极简 / 瑞士风格 / 编辑排版
 **核心流程**: 内容 → HTML 模板 → 图片生成 → 返回图片 URL → OpenClaw 发送给用户
 
 ## 🎯 使用场景
@@ -70,27 +71,28 @@ AI 将：
 **quote-card** - 金句/引用卡片
 - 适用: 名言、哲理、简短感悟
 - 尺寸: 800x800 (方形，适合 Instagram)
-- 特点: 大字体、渐变背景、装饰引号
+- 特点: 大字体编辑排版、纯色背景、无装饰引号、SVG 图标
+- 主题: light / dark / accent / blue
 
 **moment-card** - 瞬间/时刻卡片
 - 适用: 单张照片 + 描述
 - 尺寸: 800x1000 (竖版)
-- 特点: 照片为主、时间戳、简短描述
+- 特点: 杂志风格、大图留白、时间/位置 SVG 图标
 
-**daily-journal** - 日记手账风格
+**daily-journal** - 日记编辑风格
 - 适用: PhoenixClaw 完整日志
 - 尺寸: 800x1200 (竖版)
-- 特点: 纸质纹理、贴纸装饰、分栏布局
+- 特点: 瑞士网格系统、清晰层级、SVG 图标、大日期数字
 
 **social-share** - 社交媒体卡片
 - 适用: 分享亮点/成就
 - 尺寸: 1200x630 (OG Image)
-- 特点: 渐变背景、emoji、大标题
+- 特点: 双栏布局、纯色/深色主题、统计数据展示
 
 **dashboard** - 数据仪表盘
 - 适用: 周/月度汇总、统计数据
 - 尺寸: 1200x800 (横版)
-- 特点: 图表、统计数字、时间线
+- 特点: 数据可视化、单色图表、网格布局、SVG 图标
 
 ### 步骤 3: HTML/CSS 生成
 
@@ -101,13 +103,13 @@ AI 将：
    - `{{TITLE}}` - 标题
    - `{{CONTENT}}` - 主要内容
    - `{{DATE}}` - 日期
-   - `{{MOOD}}` - 心情 emoji
+   - `{{MOOD}}` - 心情文字
    - `{{ENERGY}}` - 能量值
    - `{{IMAGE_URL}}` - 图片 URL
 3. 应用基础样式 `assets/css/base-styles.css`
-4. 根据语言选择字体:
-   - 中文: Noto Sans SC / 霞鹜文楷
-   - 英文: Inter / Playfair Display
+4. 使用系统字体栈 (无需外部字体):
+   - 中文: system-ui, PingFang SC, Microsoft YaHei
+   - 英文: system-ui, Segoe UI, Roboto
 
 ### 步骤 4: 图片生成
 
@@ -124,7 +126,6 @@ bash -c 'curl -s "https://hcti.io/v1/image" \
   -u "${HCTI_USER_ID}:${HCTI_API_KEY}" \
   --data-urlencode "html@/tmp/visual_html.txt" \
   --data-urlencode "css@/tmp/visual_css.txt" \
-  -d "google_fonts=Noto+Sans+SC|Inter" \
   -d "device_scale=2"'
 ```
 
@@ -413,6 +414,32 @@ AI:
 1. 在 CSS 中定义新的配色方案
 2. 更新 `config.yaml` 中的主题选项
 3. 在模板选择时传入 `{{THEME}}` 变量
+
+---
+
+## 设计原则
+
+### 视觉风格
+- **极简主义**: 去除多余装饰，留白充足
+- **瑞士风格**: 网格系统，清晰层级
+- **编辑排版**: 大字号标题，精致细节
+
+### 配色方案
+- **主色**: #1a1a1a (深灰)
+- **辅色**: #525252, #737373, #a3a3a3 (灰度)
+- **背景**: #fafafa, #f5f5f5 (米白)
+- **强调**: #ea580c (橙红), #4f46e5 (靛蓝)
+
+### 图标系统
+使用 Lucide 风格 SVG 图标，替代所有 emoji：
+- 所有图标内联在 HTML 中
+- 统一 stroke-width: 1.5
+- 支持通过 CSS 控制大小: .icon-sm, .icon-md, .icon-lg
+
+### 字体策略
+- 使用系统字体栈，无需加载外部字体
+- 中文: system-ui, PingFang SC, Microsoft YaHei
+- 英文: system-ui, Segoe UI, Roboto, Helvetica Neue
 
 ---
 
