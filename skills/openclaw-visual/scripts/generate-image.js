@@ -192,12 +192,21 @@ async function generateWithPlaywright(html, outputPath, width, height) {
     await page.waitForTimeout(500);
 
     if (isAutoHeight) {
-      const card = page.locator('.card').first();
-      await card.screenshot({
-        path: outputPath,
-        type: 'png',
-        scale: 'device'
-      });
+      const card = await page.$('.card');
+      if (card) {
+        await card.screenshot({
+          path: outputPath,
+          type: 'png',
+          scale: 'device'
+        });
+      } else {
+        await page.screenshot({
+          path: outputPath,
+          type: 'png',
+          scale: 'device',
+          fullPage: false
+        });
+      }
     } else {
       await page.screenshot({
         path: outputPath,
