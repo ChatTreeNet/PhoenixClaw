@@ -9,7 +9,7 @@ description: |
   - 用户要求生成日志可视化 ("生成今日日志分享图")
   - 用户要求将聊天记录可视化 ("把今天的对话做成总结图")
 depends:
-  - htmlcsstoimage
+  - node-html-to-image
 metadata:
   version: 0.0.1
 ---
@@ -19,7 +19,11 @@ metadata:
 将 OpenClaw 中的任何信息转换为精美排版的图片，直接在聊天窗口中展示。
 
 **设计风格**: 现代极简 / 瑞士风格 / 编辑排版
-**核心流程**: 内容 → HTML 模板 → 图片生成 → 返回图片 URL → OpenClaw 发送给用户
+**核心流程**: 内容 → HTML 模板 → 本地生成图片 → OpenClaw 发送图片给用户
+
+**图片生成**: 本地渲染，无需外部 API
+- **默认**: `node-html-to-image` (轻量快速)
+- **高级**: `playwright` (用户要求精美/复杂效果时)
 
 ## 🎯 使用场景
 
@@ -113,33 +117,35 @@ AI 将：
 
 ### 步骤 4: 图片生成
 
-使用 `htmlcsstoimage` skill 生成图片：
+使用本地脚本生成图片：
 
 ```bash
-# 将 HTML/CSS 写入临时文件
-echo "$HTML_CONTENT" > /tmp/visual_html.txt
-echo "$CSS_CONTENT" > /tmp/visual_css.txt
-
-# 调用 htmlcsstoimage API
-bash -c 'curl -s "https://hcti.io/v1/image" \
-  -X POST \
-  -u "${HCTI_USER_ID}:${HCTI_API_KEY}" \
-  --data-urlencode "html@/tmp/visual_html.txt" \
-  --data-urlencode "css@/tmp/visual_css.txt" \
-  -d "device_scale=2"'
+# 调用本地生成脚本
+node scripts/generate-image.js \
+  --template quote-card \
+  --content '{"QUOTE":"行动是治愈恐惧的良药","AUTHOR":"威廉·詹姆斯"}' \
+  --output ~/OpenClaw/Visuals/output.png
 ```
+
+**渲染引擎选择**:
+- **默认** (`node-html-to-image`): 轻量快速，适合大多数场景
+- **高级** (`playwright`): 当用户要求"精美/复杂/高级"效果时自动切换
 
 ### 步骤 5: 返回结果
 
-解析 API 响应，获取图片 URL：
+脚本返回 JSON 结果：
 
 ```json
 {
-  "url": "https://hcti.io/v1/image/abc123..."
+  "success": true,
+  "outputPath": "/Users/xxx/OpenClaw/Visuals/output.png",
+  "renderer": "nodejs",
+  "template": "quote-card",
+  "dimensions": { "width": 800, "height": 800 }
 }
 ```
 
-将图片 URL 返回给用户，OpenClaw 会自动在聊天窗口中发送图片。
+OpenClaw 读取生成的图片文件并发送给用户。
 
 ## 📋 模板详情
 
@@ -317,19 +323,17 @@ bash -c 'curl -s "https://hcti.io/v1/image" \
 
 ### 前置要求
 
-1. **安装 htmlcsstoimage skill**:
+1. **安装依赖**:
    ```bash
-   npx skills add vm0-ai/vm0-skills@htmlcsstoimage -g -y
+   cd skills/openclaw-visual
+   npm install
    ```
 
-2. **配置 API 密钥**:
-   - 注册 [HTMLCSStoImage](https://htmlcsstoimage.com/)
-   - 获取 User ID 和 API Key
-   - 设置环境变量:
-     ```bash
-     export HCTI_USER_ID="your-user-id"
-     export HCTI_API_KEY="your-api-key"
-     ```
+2. **(可选) 安装 Playwright** - 用于高级渲染:
+   ```bash
+   npm install playwright
+   npx playwright install chromium
+   ```
 
 ### 可选配置
 
@@ -340,18 +344,17 @@ bash -c 'curl -s "https://hcti.io/v1/image" \
 default_template: "quote-card"
 
 # 默认配色主题
-default_theme: "purple"  # purple/blue/orange/green
+default_theme: "light"  # light/dark/accent/blue
 
-# 字体设置
-fonts:
-  chinese: "Noto Sans SC"  # 或 "LXGW WenKai"
-  english: "Inter"         # 或 "Playfair Display"
+# 渲染引擎
+renderer: auto  # auto | nodejs | playwright
+# auto 模式: 默认 nodejs, 用户要求"精美/复杂"时自动切换 playwright
 
 # 输出设置
 output:
-  device_scale: 2  # 1/2/3 倍分辨率
-  save_local: false  # 是否保存到本地
-  local_path: "~/OpenClaw/Visuals/"
+  path: "~/OpenClaw/Visuals/"
+  format: "png"  # png | jpeg
+  quality: 90    # JPEG 质量 (1-100)
 ```
 
 ## 💡 使用示例
@@ -363,16 +366,15 @@ output:
 AI:
 1. 识别为金句类型
 2. 选择 `quote-card` 模板
-3. 生成 HTML:
-   ```html
-   <div class="quote-card theme-purple">
-     <span class="quote-mark">"</span>
-     <p class="quote-text">行动是治愈恐惧的良药</p>
-     <div class="quote-author">—— 威廉·詹姆斯</div>
-   </div>
+3. 生成 HTML 内容
+4. 调用本地生成脚本:
+   ```bash
+   node scripts/generate-image.js \
+     --template quote-card \
+     --content '{"QUOTE":"行动是治愈恐惧的良药","AUTHOR":"威廉·詹姆斯","THEME":"light"}' \
+     --output ~/OpenClaw/Visuals/quote-20240201.png
    ```
-4. 调用 htmlcsstoimage API
-5. 返回图片 URL，在聊天窗口发送图片
+5. 读取生成的图片文件，在聊天窗口发送给用户
 
 ### 示例 2: 日志可视化
 
