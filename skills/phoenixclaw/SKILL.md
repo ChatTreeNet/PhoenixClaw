@@ -34,10 +34,9 @@ Automatically identifies journal-worthy moments, patterns, and growth opportunit
 PhoenixClaw follows a structured pipeline to ensure consistency and depth:
 
 1. **User Configuration:** Check for `~/.phoenixclaw/config.yaml`. If missing, initiate the onboarding flow defined in `references/user-config.md`.
-
 2. **Context Retrieval:** 
-   - Call `memory_get` for the current day's memory
-   - **CRITICAL: Scan ALL raw session logs and filter by message timestamp**. Session files are often split across multiple files. Do NOT classify images by session file `mtime`:
+   - **Scan memory files (NEW):** Read `memory/YYYY-MM-DD.md` and `memory/YYYY-MM-DD-*.md` files for manually recorded daily reflections. These files contain personal thoughts, emotions, and context that users explicitly ask the AI to remember via commands like "记一下" (remember this). **CRITICAL**: Do not skip these files - they contain explicit user reflections that session logs may miss.
+   - **Scan session logs:** Call `memory_get` for the current day's memory, then **CRITICAL: Scan ALL raw session logs and filter by message timestamp**. Session files are often split across multiple files. Do NOT classify images by session file `mtime`:
       ```bash
       # Read all session logs from both OpenClaw locations, then filter by per-message timestamp
       # Use timezone-aware epoch range to avoid UTC/local-day mismatches.
@@ -76,8 +75,8 @@ PY
     - **Why session logs are mandatory**: `memory_get` returns **text only**. Image metadata, photo references, and media attachments are **only available in session logs**. Skipping session logs = missing all photos.
     - **Activity signal quality**: Do not treat heartbeat/cron system noise as user activity. Extract user/assistant conversational content and media events first, then classify moments.
     - **Edge case - Midnight boundary**: For late-night activity that spans midnight, expand the **timestamp** range to include spillover windows (for example, previous day 23:00-24:00) and still filter per-message by `timestamp`.
-   - If memory is sparse, reconstruct context from session logs, then update daily memory
-   - Incorporate historical context via `memory_search` (skip if embeddings unavailable)
+   - **Merge sources:** Combine content from both memory files and session logs. Memory files capture explicit user reflections; session logs capture conversational flow and media. Use both to build complete context.
+   - **Fallback:** If memory is sparse, reconstruct context from session logs, then update memory so future runs use the enriched memory. Incorporate historical context via `memory_search` (skip if embeddings unavailable)
 
 3. **Moment Identification:** Identify "journal-worthy" content: critical decisions, emotional shifts, milestones, or shared media. See `references/media-handling.md` for photo processing. This step generates the `moments` data structure that plugins depend on.
    **Image Processing (CRITICAL)**:
@@ -85,7 +84,6 @@ PY
    - Categorize images (food, selfie, screenshot, document, etc.)
    - Match images to moments (e.g., breakfast photo → breakfast moment)
    - Store image metadata with moments for journal embedding
-
 4. **Pattern Recognition:** Detect recurring themes, mood fluctuations, and energy levels. Map these to growth opportunities using `references/skill-recommendations.md`.
 
 5. **Plugin Execution:** Execute all registered plugins at their declared hook points. See `references/plugin-protocol.md` for the complete plugin lifecycle:
