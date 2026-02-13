@@ -1,0 +1,8 @@
+{
+  "slug": "openclaw-visual",
+  "version": "0.0.2",
+  "i18n": {
+    "supported_locales": ["en", "zh"],
+    "default_locale": "zh"
+  }
+}
