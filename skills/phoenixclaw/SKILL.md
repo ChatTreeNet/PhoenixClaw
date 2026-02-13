@@ -9,7 +9,7 @@ description: |
   - User asks for pattern analysis ("Analyze my patterns", "How am I doing?")
   - User requests summaries ("Generate weekly/monthly summary")
 metadata:
-  version: 0.0.13
+  version: 0.0.14
 ---
 
 # PhoenixClaw: Zero-Tag Passive Journaling
@@ -100,6 +100,21 @@ PY
    **Image Processing (CRITICAL)**:
    - For each extracted image, generate descriptive alt-text via Vision Analysis
    - Categorize images (food, selfie, screenshot, document, etc.)
+   
+   **Filter Finance Screenshots (NEW)**:
+   Payment screenshots (WeChat Pay, Alipay, etc.) should NOT be included in the journal narrative. These are tool images, not life moments.
+   
+   Detection criteria (check any):
+   1. **OCR keywords**: "支付成功", "支付完成", "微信支付", "支付宝", "订单号", "交易单号", "¥" + amount
+   2. **Context clues**: Image sent with nearby text containing "记账", "支付", "付款", "转账"
+   3. **Visual patterns**: Standard payment app UI layouts (green WeChat, blue Alipay)
+   
+   Handling rules:
+   - Mark as `finance_screenshot` type
+   - Route to Ledger plugin (if enabled) for transaction recording
+   - **EXCLUDE from journal main narrative** unless explicitly described as part of a life moment (e.g., "今天请朋友吃饭" with payment screenshot)
+   - Never include raw payment screenshots in daily journal images section
+   
    - Match images to moments (e.g., breakfast photo → breakfast moment)
    - Store image metadata with moments for journal embedding
 4. **Pattern Recognition:** Detect recurring themes, mood fluctuations, and energy levels. Map these to growth opportunities using `references/skill-recommendations.md`.
