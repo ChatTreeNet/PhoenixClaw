@@ -9,7 +9,7 @@ description: |
   - User asks for pattern analysis ("Analyze my patterns", "How am I doing?")
   - User requests summaries ("Generate weekly/monthly summary")
 metadata:
-  version: 0.0.13
+  version: 0.0.15
 ---
 
 # PhoenixClaw: Zero-Tag Passive Journaling
@@ -100,6 +100,21 @@ PY
    **Image Processing (CRITICAL)**:
    - For each extracted image, generate descriptive alt-text via Vision Analysis
    - Categorize images (food, selfie, screenshot, document, etc.)
+   
+   **Filter Finance Screenshots (NEW)**:
+   Payment screenshots (WeChat Pay, Alipay, etc.) should NOT be included in the journal narrative. These are tool images, not life moments.
+   
+   Detection criteria (check any):
+   1. **OCR keywords**: "支付成功", "支付完成", "微信支付", "支付宝", "订单号", "交易单号", "¥" + amount
+   2. **Context clues**: Image sent with nearby text containing "记账", "支付", "付款", "转账"
+   3. **Visual patterns**: Standard payment app UI layouts (green WeChat, blue Alipay)
+   
+   Handling rules:
+   - Mark as `finance_screenshot` type
+   - Route to Ledger plugin (if enabled) for transaction recording
+   - **EXCLUDE from journal main narrative** unless explicitly described as part of a life moment (e.g., "今天请朋友吃饭" with payment screenshot)
+   - Never include raw payment screenshots in daily journal images section
+   
    - Match images to moments (e.g., breakfast photo → breakfast moment)
    - Store image metadata with moments for journal embedding
 4. **Pattern Recognition:** Detect recurring themes, mood fluctuations, and energy levels. Map these to growth opportunities using `references/skill-recommendations.md`.
@@ -130,6 +145,35 @@ PY
 PhoenixClaw is designed to run without user intervention. It utilizes OpenClaw's built-in cron system to trigger its analysis daily at 10:00 PM local time (0 22 * * *).
 - Setup details can be found in `references/cron-setup.md`.
 - **Mode:** Primarily Passive. The AI proactively summarizes the day's activities without being asked.
+
+### Rolling Journal Window (NEW)
+To solve the 22:00-24:00 content loss issue, PhoenixClaw now supports a **rolling journal window** mechanism:
+
+**Problem**: Fixed 24-hour window (00:00-22:00) misses content between 22:00-24:00 when journal is generated at 22:00.
+
+**Solution**: `scripts/rolling-journal.js` scans from **last journal time → now** instead of fixed daily boundaries.
+
+**Features**:
+- Configurable schedule hour (default: 22:00, customizable via `~/.phoenixclaw/config.yaml`)
+- Rolling window: No content loss even if generation time varies
+- Backward compatible with existing `late-night-supplement.js`
+
+**Configuration** (`~/.phoenixclaw/config.yaml`):
+```yaml
+schedule:
+  hour: 22        # Journal generation time
+  minute: 0
+  rolling_window: true   # Enable rolling window (recommended)
+```
+
+**Usage**:
+```bash
+# Default: generate from last journal to now
+node scripts/rolling-journal.js
+
+# Specific date
+node scripts/rolling-journal.js 2026-02-12
+```
 
 ## 💬 Explicit Triggers
 
