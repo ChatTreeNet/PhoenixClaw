@@ -159,6 +159,12 @@ function readSessionLogs() {
     console.log(`  [scan] Skipped ${parseErrors} malformed line(s)`);
   }
 
+  logs.sort((a, b) => {
+    const ta = new Date(a.timestamp || a.created_at || 0).getTime();
+    const tb = new Date(b.timestamp || b.created_at || 0).getTime();
+    return ta - tb;
+  });
+
   return logs;
 }
 
