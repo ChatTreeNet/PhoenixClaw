@@ -12,6 +12,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 // 配置
 const CONFIG = {
@@ -52,10 +53,21 @@ function loadConfig() {
       const hourMatch = content.match(/schedule_hour:\s*(\d+)/);
       const minuteMatch = content.match(/schedule_minute:\s*(\d+)/);
       const rollingMatch = content.match(/rolling_window:\s*(true|false)/);
+      // FIX: 读取 journal_path 配置
+      const pathMatch = content.match(/journal_path:\s*(.+)/);
       
       if (hourMatch) config.scheduleHour = parseInt(hourMatch[1]);
       if (minuteMatch) config.scheduleMinute = parseInt(minuteMatch[1]);
       if (rollingMatch) config.rollingWindow = rollingMatch[1] === 'true';
+      // FIX: 解析并展开 journal_path
+      if (pathMatch) {
+        let jp = pathMatch[1].trim();
+        // 展开 ~ 为 home 目录
+        if (jp.startsWith('~/')) {
+          jp = path.join(require('os').homedir(), jp.slice(2));
+        }
+        config.journalPath = jp;
+      }
     } catch (e) {
       console.error('Error reading config:', e.message);
     }
@@ -67,8 +79,8 @@ function loadConfig() {
 /**
  * 找到最后一次日记的时间
  */
-function getLastJournalTime() {
-  const dailyDir = path.join(CONFIG.journalPath, 'daily');
+function getLastJournalTime(journalPath) {
+  const dailyDir = path.join(journalPath || CONFIG.journalPath, 'daily');
   if (!fs.existsSync(dailyDir)) return null;
 
   const files = fs.readdirSync(dailyDir)
@@ -308,14 +320,43 @@ function generateJournal(moments, startTime, endTime) {
 /**
  * 保存日记
  */
-function saveJournal(content, date) {
-  const dailyDir = path.join(CONFIG.journalPath, 'daily');
+function saveJournal(content, date, journalPath) {
+  const dailyDir = path.join(journalPath || CONFIG.journalPath, 'daily');
+  
+  // 确保目录存在
   if (!fs.existsSync(dailyDir)) {
-    fs.mkdirSync(dailyDir, { recursive: true });
+    try {
+      fs.mkdirSync(dailyDir, { recursive: true });
+    } catch (e) {
+      // FIX: 如果 mkdir 失败，尝试使用 shell
+      try {
+        execSync(`mkdir -p "${dailyDir}"`, { encoding: 'utf-8' });
+      } catch (shellErr) {
+        console.error('Failed to create directory:', shellErr.message);
+        throw e;
+      }
+    }
   }
   
   const filename = path.join(dailyDir, `${date}.md`);
-  fs.writeFileSync(filename, content);
+  
+  // FIX: 尝试直接写入，失败则使用 shell
+  try {
+    fs.writeFileSync(filename, content);
+  } catch (e) {
+    console.log('Direct write failed, trying shell escape...');
+    try {
+      // 使用 shell 写入，处理特殊字符
+      const escapedContent = content.replace(/'/g, "'\"'\"'");
+      execSync(`cat > "${filename}" << 'EOF'
+${escapedContent}
+EOF`, { encoding: 'utf-8' });
+    } catch (shellErr) {
+      console.error('Shell write also failed:', shellErr.message);
+      throw e;
+    }
+  }
+  
   return filename;
 }
 
@@ -329,9 +370,10 @@ async function main() {
   const userConfig = loadConfig();
   console.log(`Schedule: ${userConfig.scheduleHour}:${String(userConfig.scheduleMinute).padStart(2, '0')}`);
   console.log(`Rolling window: ${userConfig.rollingWindow ? 'enabled' : 'disabled'}`);
+  console.log(`Journal path: ${userConfig.journalPath}`);  // FIX: 显示使用的路径
 
   // 2. 找到上次日记时间
-  const lastJournalTime = getLastJournalTime();
+  const lastJournalTime = getLastJournalTime(userConfig.journalPath);  // FIX: 传递 journalPath
   if (lastJournalTime) {
     console.log(`Last journal: ${lastJournalTime.toLocaleString('zh-CN')}`);
   } else {
@@ -368,7 +410,7 @@ async function main() {
   
   if (journalContent) {
     const today = new Date().toISOString().split('T')[0];
-    const filename = saveJournal(journalContent, today);
+    const filename = saveJournal(journalContent, today, userConfig.journalPath);  // FIX: 传递 journalPath
     console.log(`✅ Journal saved: ${filename}`);
     console.log(`   Contains ${moments.filter(m => m.type !== 'date-marker').length} moments`);
   }
@@ -389,4 +431,6 @@ module.exports = {
   extractMoments,
   extractText,
   getDefaultSessionRoots,
+  getLastJournalTime,  // FIX: 导出以支持测试
+  saveJournal,  // FIX: 导出以支持测试
 };
