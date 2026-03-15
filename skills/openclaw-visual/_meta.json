@@ -1,0 +1,28 @@
+{
+  "ownerId": "kn76ecdj2xm85rsz42qdktm2nd808tgg",
+  "slug": "openclaw-visual",
+  "version": "0.0.2",
+  "publishedAt": 1770824347180,
+  "requiredPaths": [
+    "~/.openclaw/sessions/*.jsonl",
+    "~/.openclaw/agents/*.jsonl",
+    "~/.openclaw/cron/runs/*.jsonl",
+    "~/.agent/sessions/*.jsonl",
+    "~/PhoenixClaw/Journal/daily/*.md",
+    "~/PhoenixClaw/Journal/assets/*"
+  ],
+  "writePaths": [
+    "~/PhoenixClaw/Journal/assets/*"
+  ],
+  "capabilities": [
+    "read_session_logs",
+    "read_journal_entries",
+    "copy_media_assets",
+    "generate_images"
+  ],
+  "privacy": {
+    "dataAccess": "session_logs_and_journal_only",
+    "mediaHandling": "copy_to_journal_assets",
+    "retention": "user_configured_journal_path"
+  }
+}

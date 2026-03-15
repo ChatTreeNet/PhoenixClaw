@@ -59,7 +59,7 @@ energy: high
 
 **解析步骤:**
 1. 确定日期范围
-2. 扫描 `~/.openclaw/sessions/*.jsonl`
+2. 扫描所有 session 路径（`~/.openclaw/sessions/*.jsonl`, `~/.openclaw/agents/`, `~/.openclaw/cron/runs/`, `~/.agent/sessions/`）
 3. 按时间戳过滤消息
 4. 提取关键话题和决策
 5. 统计情绪/能量趋势

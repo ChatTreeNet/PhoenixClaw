@@ -11,7 +11,7 @@ description: |
 depends:
   - node-html-to-image
 metadata:
-  version: 0.0.1
+  version: 0.0.2
 ---
 
 # OpenClaw Visual - 精美图文生成器
@@ -391,7 +391,7 @@ AI:
 用户: "把今天的对话做成总结图"
 
 AI:
-1. 扫描 `~/.openclaw/sessions/` 今日记录
+1. 扫描所有 session 路径（`~/.openclaw/sessions/`, `~/.openclaw/agents/`, `~/.openclaw/cron/runs/`, `~/.agent/sessions/`）今日记录
 2. 提取关键话题和决策
 3. 选择 `dashboard` 或 `social-share` 模板
 4. 生成并发送图片
