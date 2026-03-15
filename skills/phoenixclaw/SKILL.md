@@ -1,8 +1,8 @@
 ---
 name: phoenixclaw
 description: |
-  Passive journaling skill that scans daily conversations via cron to generate
-  markdown journals using semantic understanding.
+  Passive journaling skill that scans daily conversations from ALL session paths
+  (main, agents, cron) via cron to generate markdown journals using semantic understanding.
 
   Use when:
   - User requests journaling ("Show me my journal", "What did I do today?")
@@ -55,12 +55,13 @@ print(int(start.timestamp()), int(end.timestamp()))
 PY
       )
 
+      # Recursively scan all session directories (multi-agent architecture support)
       for dir in "$HOME/.openclaw/sessions" \
                  "$HOME/.openclaw/agents" \
                  "$HOME/.openclaw/cron/runs" \
                  "$HOME/.agent/sessions"; do
         [ -d "$dir" ] || continue
-        find "$dir" -name "*.jsonl" -print0
+        find "$dir" -type f -name "*.jsonl" -print0
       done |
         xargs -0 jq -cr --argjson start "$START_EPOCH" --argjson end "$END_EPOCH" '
           (.timestamp // .created_at // empty) as $ts
